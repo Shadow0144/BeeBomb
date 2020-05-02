@@ -1,0 +1,3 @@
+displayName = Bee Bomb
+author = Shadow0144
+version = 0.1
