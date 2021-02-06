@@ -21,7 +21,7 @@ namespace BeeBomb.Items
 			item.useAnimation = 20;
 			item.useStyle = ItemUseStyleID.SwingThrow;
 			item.value = 10000;
-			item.rare = 3;
+			item.rare = ItemRarityID.Orange;
 			item.maxStack = 99;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = false;
