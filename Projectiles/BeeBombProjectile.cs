@@ -1,12 +1,11 @@
-﻿using IL.Terraria.DataStructures;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace BeeBomb.Items
+namespace BeeBomb.Projectiles
 {
     public class BeeBombProjectile : ModProjectile
     {
@@ -20,8 +19,8 @@ namespace BeeBomb.Items
 		public override void SetDefaults()
 		{
 			projectile.arrow = false;
-			projectile.width = 10;
-			projectile.height = 10;
+			projectile.width = 16;
+			projectile.height = 24;
 			projectile.aiStyle = 16;
 			projectile.friendly = true;
 			projectile.ranged = true;

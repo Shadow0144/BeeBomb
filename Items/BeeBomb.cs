@@ -15,8 +15,8 @@ namespace BeeBomb.Items
 		{
 			item.thrown = true;
 			item.noMelee = true;
-			item.width = 10;
-			item.height = 10;
+			item.width = 16;
+			item.height = 24;
 			item.useTime = 20;
 			item.useAnimation = 20;
 			item.useStyle = ItemUseStyleID.SwingThrow;
@@ -25,7 +25,7 @@ namespace BeeBomb.Items
 			item.maxStack = 99;
 			item.UseSound = SoundID.Item1;
 			item.autoReuse = false;
-			item.shoot = mod.ProjectileType("BeeBombProjectile");
+			item.shoot = ModContent.ProjectileType<Projectiles.BeeBombProjectile>();
 			item.shootSpeed = 8f;
 			item.useTurn = true;
 			item.consumable = true;

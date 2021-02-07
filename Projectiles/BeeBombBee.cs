@@ -1,6 +1,6 @@
 ﻿using Terraria.ModLoader;
 
-namespace BeeBomb.Items
+namespace BeeBomb.Projectiles
 {
     public class BeeBombBee : ModProjectile
     {

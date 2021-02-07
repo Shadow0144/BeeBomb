@@ -11,7 +11,6 @@ namespace BeeBomb.NPCs
 		{
 			if (type == NPCID.WitchDoctor 
 				&& NPC.downedQueenBee 
-				&& NPC.downedPlantBoss 
 				&& Main.player[Main.myPlayer].ZoneJungle)
 			{
 				shop.item[nextSlot].SetDefaults(ModContent.ItemType<BeeHouse>());
