@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.DataStructures;
 
 namespace BeeBomb.Projectiles
 {
     public class BeeBombProjectile : ModProjectile
     {
-        private int radius = 10;
+        private const int TIMER = 55;
+        private const int RADIUS = 10;
+        private const int BEES_SPEED = 1;
 
         public override void SetStaticDefaults()
 		{
@@ -18,20 +21,18 @@ namespace BeeBomb.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.arrow = false;
 			projectile.width = 16;
 			projectile.height = 24;
 			projectile.aiStyle = 16;
-			projectile.friendly = true;
-			projectile.ranged = true;
-			projectile.maxPenetrate = 0;
-			projectile.tileCollide = true;
-            projectile.timeLeft = 35;
+            aiType = ProjectileID.StickyBomb;
+            projectile.timeLeft = TIMER;
         }
 
-        public override bool OnTileCollide(Vector2 oldVelocity)
+        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
         {
-            return base.OnTileCollide(new Vector2());
+            width = 16;
+            height = 16;
+            return true;
         }
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
@@ -54,11 +55,11 @@ namespace BeeBomb.Projectiles
             {
                 for (int y = -radius; y <= radius; y++)
                 {
-                    int xPosition = (int)(x + position.X / 16.0f);
-                    int yPosition = (int)(y + position.Y / 16.0f);
+                    //int xPosition = (int)(x + position.X / 16.0f);
+                    //int yPosition = (int)(y + position.Y / 16.0f);
                     if (Math.Sqrt(x * x + y * y) <= radius + 0.5)
                     {
-                        WorldGen.KillTile(xPosition, yPosition, false, false, false);
+                        //WorldGen.KillTile(xPosition, yPosition, false, false, false);
                         Dust.NewDust(position, 22, 22, DustID.Smoke, 0.0f, 0.0f, 120, new Color(), 1f);
                     }
                     else { }
@@ -66,13 +67,12 @@ namespace BeeBomb.Projectiles
             }
 
             Random random = new Random();
-            float speed = projectile.velocity.Length();
             for (int i = 0; i < bees; i++)
             {
-                int projectileID = Projectile.NewProjectile(projectile.position, 
+                int projectileID = Projectile.NewProjectile(projectile.Center, 
                     new Vector2(
-                        ((float)random.NextDouble()) * speed * (random.NextDouble() > 0.5 ? 1 : -1), 
-                        ((float)random.NextDouble()) * speed * (random.NextDouble() > 0.5 ? 1 : -1)),
+                        ((float)random.NextDouble()) * BEES_SPEED * (random.NextDouble() > 0.5 ? 1 : -1), 
+                        ((float)random.NextDouble()) * BEES_SPEED * (random.NextDouble() > 0.5 ? 1 : -1)),
                         ProjectileID.Bee, 350, 10);
                 Main.projectile[projectileID].friendly = true;
             }
@@ -80,14 +80,13 @@ namespace BeeBomb.Projectiles
 
         public virtual void ExplosionDamage()
         {
-            //if (Main.player[projectile.owner].EE().ExplosiveCrit > Main.rand.Next(1, 101)) crit = true;
             foreach (NPC npc in Main.npc)
             {
                 float dist = Vector2.Distance(npc.Center, projectile.Center);
-                if (dist / 16f <= radius && !npc.friendly)
+                if (((dist / 16.0f) <= RADIUS) && (!npc.friendly))
                 {
                     int dir = (dist > 0) ? 1 : -1;
-                    //npc.StrikeNPC(projectile.damage, projectile.knockBack, dir, crit);
+                    npc.StrikeNPC(projectile.damage, projectile.knockBack, dir);
                 }
             }
 
@@ -95,32 +94,32 @@ namespace BeeBomb.Projectiles
             {
                 if (player == null || player.whoAmI == 255 || !player.active) return;
                 if (!CanHitPlayer(player)) continue;
-                //if (player.EE().BlastShielding &&
-                //    player.EE().BlastShieldingActive) continue;
                 float dist = Vector2.Distance(player.Center, projectile.Center);
                 int dir = (dist > 0) ? 1 : -1;
-                if (dist / 16f <= radius && Main.netMode == NetmodeID.SinglePlayer)
+                if (((dist / 16.0f) <= RADIUS) && (Main.netMode == NetmodeID.SinglePlayer))
                 {
-                    //player.Hurt(PlayerDeathReason.ByProjectile(player.whoAmI, projectile.whoAmI), (int)(projectile.damage * (crit ? 1.5 : 1)), dir);
+                    player.Hurt(PlayerDeathReason.ByProjectile(player.whoAmI, projectile.whoAmI), (int)(projectile.damage * 1), dir); // 1 - never crit
                     player.hurtCooldowns[0] += 15;
                 }
-                else if (Main.netMode != NetmodeID.MultiplayerClient && dist / 16f <= radius)
+                else if ((Main.netMode != NetmodeID.MultiplayerClient) && ((dist / 16.0f) <= RADIUS))
                 {
-                    //NetMessage.SendPlayerHurt(projectile.owner, PlayerDeathReason.ByProjectile(player.whoAmI, projectile.whoAmI), (int)(projectile.damage * (crit ? 1.5 : 1)), dir, crit, pvp: true, 0);
+                    NetMessage.SendPlayerHurt(projectile.owner, PlayerDeathReason.ByProjectile(player.whoAmI, projectile.whoAmI), (int)(projectile.damage * 1), dir, false, pvp: true, 0); // 1 - never crit
                 }
+                else { }
             }
 
         }
 
         public static void ExplosionDust(int Radius, Vector2 Center, Color color = default, Color cloudColor = default, int type = 1, Vector2 Direction = default, bool shake = true, int dustType = 6)
         {
-            //Check to see if the type is 1, 2 or 3, else default to 1
+            // Check to see if the type is 1, 2 or 3, else default to 1
             List<int> types = new List<int> { 1, 2, 3, 4 };
 
             if (!types.Contains(type))
             {
                 type = 1;
             }
+            else { }
 
             //What to preform once the type has been found
             switch (type)
@@ -142,17 +141,10 @@ namespace BeeBomb.Projectiles
                     break;
             }
 
-            //lighting - brief flash
+            // Lighting - brief flash
             Lighting.AddLight(Center, new Vector3(Radius / 2.3f, Radius / 2.3f, Radius / 2.3f));
             Lighting.maxX = Radius / 10;
             Lighting.maxY = Radius / 10;
-
-            //shake 
-            if (Radius >= 15 && type != 2 && shake)
-            {
-                //Main.LocalPlayer.EE().shake = true;
-            }
         }
-
     }
 }
