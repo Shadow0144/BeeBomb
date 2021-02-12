@@ -1,3 +1,4 @@
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -7,7 +8,7 @@ namespace BeeBomb.Items
 	{
 		public override void SetStaticDefaults() 
 		{
-			// DisplayName.SetDefault("BeeBomb"); // By default, capitalization in classnames will add spaces to the display name. You can customize the display name here by uncommenting this line.
+			// DisplayName.SetDefault("Bee Bomb"); // By default, capitalization in classnames will add spaces to the display name
 			Tooltip.SetDefault("Explodes into a swarm of bees!");
 		}
 
@@ -20,7 +21,7 @@ namespace BeeBomb.Items
 			item.useTime = 20;
 			item.useAnimation = 20;
 			item.useStyle = ItemUseStyleID.SwingThrow;
-			item.value = 10000;
+			item.value = Item.buyPrice(silver: 30);
 			item.rare = ItemRarityID.Orange;
 			item.maxStack = 99;
 			item.UseSound = SoundID.Item1;
@@ -35,9 +36,9 @@ namespace BeeBomb.Items
 		public override void AddRecipes() 
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.DirtBlock, 1);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.SetResult(this, 99);
+			recipe.AddIngredient(ItemID.Hive, 5); // Switch to BeeHive (1) when 1.4 is available
+			recipe.AddIngredient(ItemID.Dynamite, 1);
+			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
 		}
 	}
