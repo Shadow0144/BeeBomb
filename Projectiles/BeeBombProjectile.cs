@@ -18,8 +18,6 @@ namespace BeeBomb.Projectiles
         private const int RADIUS = 8 * 16;
         private const int LOW_BEES = 35; // Beenade launches 15-25
         private const int HIGH_BEES = 45; // Beenade launches 15-25
-        private const double BEES_OFFSET = 1.0;
-        private const double BEES_SPEED = 1.0;
         private const int BEES_DAMAGE = 12; // 12 is default
         private const float BEES_KNOCKBACK = 1.0f;
         private const int HONEY_TIMER = 500;
@@ -109,7 +107,6 @@ namespace BeeBomb.Projectiles
                 float dist = Vector2.Distance(npc.Center, projectile.Center);
                 if ((dist <= RADIUS) && (!npc.friendly))
                 {
-                    int dir = (dist > 0) ? 1 : -1;
                     npc.AddBuff(ModContent.BuffType<HoneyedBuff>(), HONEY_TIMER, false);
                 }
             }
