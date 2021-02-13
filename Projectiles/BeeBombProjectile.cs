@@ -11,16 +11,17 @@ namespace BeeBomb.Projectiles
 {
     public class BeeBombProjectile : ModProjectile
     {
-        // Dynamite is 250, but we'll scale back because it is has to burst through a hive and does a lot of bee damage and debuffs
-        private const int DAMAGE = 200;
+        // Dynamite is 250, but we'll scale back because it is has to burst through a hive, doesn't break tiles, and does a lot of bee damage and debuffs
+        private const int DAMAGE = 150;
         private const int TIMER = 100; // 180 is the default
         private const int FIRE_RADIUS = 4 * 16;
         private const int RADIUS = 8 * 16;
-        private const int BEES = 12;
+        private const int LOW_BEES = 35; // Beenade launches 15-25
+        private const int HIGH_BEES = 45; // Beenade launches 15-25
         private const double BEES_OFFSET = 1.0;
         private const double BEES_SPEED = 1.0;
-        private const int BEES_DAMAGE = 10;
-        private const float BEES_KNOCKBACK = 10.0f;
+        private const int BEES_DAMAGE = 12; // 12 is default
+        private const float BEES_KNOCKBACK = 1.0f;
         private const int HONEY_TIMER = 500;
 
         public override void SetStaticDefaults()
@@ -30,8 +31,8 @@ namespace BeeBomb.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 24;
+			projectile.width = 32;
+			projectile.height = 48;
             projectile.CloneDefaults(ProjectileID.StickyBomb);
             aiType = ProjectileID.StickyBomb;
             projectile.damage = DAMAGE;
@@ -40,8 +41,9 @@ namespace BeeBomb.Projectiles
 
         public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
         {
-            width = 16;
-            height = 16;
+            width = 32;
+            height = 32;
+            fallThrough = true; // Will not fall through because of sticky AI
             return true;
         }
 
@@ -52,7 +54,7 @@ namespace BeeBomb.Projectiles
 
         public override void Kill(int timeLeft)
         {
-            Vector2 position = projectile.Center;
+            Vector2 position = projectile.position;
             Main.PlaySound(SoundID.Item14, (int)position.X, (int)position.Y);
             
             ExplosionDamage();
@@ -77,40 +79,38 @@ namespace BeeBomb.Projectiles
                 }
             }
 
-            Random random = new Random();
-            for (int i = 0; i < BEES; i++)
+            // Bee-spawning method used by the beenade
+            if (projectile.owner == Main.myPlayer)
             {
-                double angle = ((2.0 * Math.PI * i) / BEES) + (Math.PI / BEES);
-                Vector2 offset = new Vector2(((float)(Math.Cos(angle) * BEES_OFFSET)), ((float)(Math.Sin(angle) * BEES_OFFSET)));
-                double direction = (2.0 * Math.PI * random.NextDouble());
-                //if (WorldGen.TileEmpty(projectile.Center + offset))
+                int num = Main.rand.Next(LOW_BEES, HIGH_BEES);
+                for (int i = 0; i < num; ++i)
                 {
-                    Projectile.NewProjectile(projectile.Center + offset,
-                        new Vector2(((float)(Math.Cos(direction) * BEES_SPEED)), ((float)(Math.Sin(direction) * BEES_SPEED))),
-                        ModContent.ProjectileType<Projectiles.BeeBombBee>(), BEES_DAMAGE, BEES_KNOCKBACK, projectile.owner);
+                    Projectile.NewProjectile((float)projectile.Center.X, (float)projectile.Center.Y, // Using position seems to spawn them in the wrong location
+                        (float)Main.rand.Next(-35, 36) * 0.02f, (float)Main.rand.Next(-35, 36) * 0.02f,
+                        Main.player[projectile.owner].beeType(), Main.player[projectile.owner].beeDamage(BEES_DAMAGE),
+                        Main.player[projectile.owner].beeKB(BEES_KNOCKBACK), Main.myPlayer, 0.0f, 0.0f);
                 }
-                //else { }
             }
+            else { }
         }
 
         public override void AI()
         {
             base.AI();
-            projectile.damage = DAMAGE;
+            projectile.damage = DAMAGE; // Damage is normally overridden when the bomb begins to exlode
         }
 
         public virtual void ExplosionDamage()
         {
+            // Damage is handled by the base AI
+
             foreach (NPC npc in Main.npc)
             {
                 float dist = Vector2.Distance(npc.Center, projectile.Center);
-                mod.Logger.Info("Distance: " + dist);
                 if ((dist <= RADIUS) && (!npc.friendly))
                 {
-                    mod.Logger.Info("In range");
                     int dir = (dist > 0) ? 1 : -1;
                     npc.AddBuff(ModContent.BuffType<HoneyedBuff>(), HONEY_TIMER, false);
-                    //npc.StrikeNPC(projectile.damage, projectile.knockBack, dir);
                 }
             }
 
@@ -123,13 +123,10 @@ namespace BeeBomb.Projectiles
                 if ((dist <= RADIUS) && (Main.netMode == NetmodeID.SinglePlayer))
                 {
                     player.AddBuff(ModContent.BuffType<HoneyedBuff>(), HONEY_TIMER, false);
-                    //player.Hurt(PlayerDeathReason.ByProjectile(player.whoAmI, projectile.whoAmI), (int)(projectile.damage * 1), dir); // 1 - never crit
-                    player.hurtCooldowns[0] += 15;
                 }
                 else if ((Main.netMode != NetmodeID.MultiplayerClient) && (dist <= RADIUS))
                 {
                     player.AddBuff(ModContent.BuffType<HoneyedBuff>(), HONEY_TIMER, false);
-                    //NetMessage.SendPlayerHurt(projectile.owner, PlayerDeathReason.ByProjectile(player.whoAmI, projectile.whoAmI), (int)(projectile.damage * 1), dir, false, pvp: true, 0); // 1 - never crit
                 }
                 else { }
             }

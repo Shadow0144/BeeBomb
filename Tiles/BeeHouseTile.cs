@@ -8,6 +8,8 @@ namespace BeeBomb.Tiles
 {
 	public class BeeHouseTile : ModTile
 	{
+		const int FRAMES = 4;
+
 		public override void SetDefaults()
 		{
 			Main.tileFrameImportant[Type] = true;
@@ -16,8 +18,9 @@ namespace BeeBomb.Tiles
 			TileObjectData.addTile(Type);
 			Main.tileLavaDeath[Type] = true;
 			ModTranslation name = CreateMapEntryName();
+			name.SetDefault("Bee House");
 			AddMapEntry(new Color(39, 62, 68), name);
-			animationFrameHeight = 36;
+			animationFrameHeight = 38;
 			disableSmartCursor = true;
 			adjTiles = new int[] { TileID.WorkBenches };
 		}
@@ -32,7 +35,7 @@ namespace BeeBomb.Tiles
 			if (++frameCounter > 8)
 			{
 				frameCounter = 0;
-				if (++frame > 1)
+				if (++frame >= FRAMES)
 				{
 					frame = 0;
 				}

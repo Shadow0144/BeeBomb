@@ -26,13 +26,10 @@ namespace BeeBomb.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            //player.GetImmuneAlpha(COLOR, 1);
-            //Main.buffColor(COLOR);
-            //GameShaders.Armor.Apply(2869, player);
-            //GameShaders.Armor.ApplySecondary(2869, player);
+            base.Update(player, ref buffIndex);
             player.moveSpeed *= SPEED_MOD;
-            player.dripping = true;
             player.honeyWet = true;
+            addHoney(player.position, player.width, player.height, player.velocity);
         }
 
         public override void Update(NPC npc, ref int buffIndex)
@@ -40,17 +37,56 @@ namespace BeeBomb.Buffs
             base.Update(npc, ref buffIndex);
             npc.velocity.X *= SPEED_MOD;
             npc.velocity.Y *= SPEED_MOD;
-            if (npc.buffTime[buffIndex] <= 0)
+            npc.honeyWet = true;
+            addHoney(npc.position, npc.width, npc.height, npc.velocity);
+        }
+
+        private void addHoney(Vector2 position, int width, int height, Vector2 velocity)
+        {
+            position.X -= 2.0f;
+            position.Y -= 2.0f;
+            if (Main.rand.Next(2) == 0)
             {
-                npc.honeyWet = false;
-                npc.dripping = false;
-                npc.color = default(Color);
+                int index = Dust.NewDust(position, width + 4, height + 2,
+                    ModContent.DustType<Dusts.HoneyDust>(), 0.0f, 0.0f, 50, new Color(), 0.8f);
+                if (Main.rand.Next(2) == 0)
+                {
+                    Main.dust[index].alpha += 25;
+                }
+                else { }
+                if (Main.rand.Next(2) == 0)
+                {
+                    Main.dust[index].alpha += 25;
+                }
+                else { }
+                Main.dust[index].noLight = true;
+                Dust dust1 = Main.dust[index];
+                dust1.velocity *= 0.2f;
+                Main.dust[index].velocity.Y += 0.200000002980232f;
+                Dust dust2 = Main.dust[index];
+                dust2.velocity += velocity;
             }
             else
             {
-                npc.honeyWet = true;
-                npc.dripping = true;
-                npc.color = COLOR;
+                int index = Dust.NewDust(position, width + 8, height + 8,
+                    ModContent.DustType<Dusts.HoneyDust>(), 0.0f, 0.0f, 50, new Color(), 1.1f);
+                if (Main.rand.Next(2) == 0)
+                {
+                    Main.dust[index].alpha += 25;
+                }
+                else { }
+                if (Main.rand.Next(2) == 0)
+                {
+                    Main.dust[index].alpha += 25;
+                }
+                else { }
+                Main.dust[index].noLight = true;
+                Main.dust[index].noGravity = true;
+                Dust dust1 = Main.dust[index];
+                dust1.velocity *= 0.2f;
+                Main.dust[index].velocity.Y += 1.0f;
+                Dust dust2 = Main.dust[index];
+                dust2.velocity += velocity;
             }
         }
     }

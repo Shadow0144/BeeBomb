@@ -16,8 +16,8 @@ namespace BeeBomb.Items
 		{
 			item.thrown = true;
 			item.noMelee = true;
-			item.width = 16;
-			item.height = 24;
+			item.width = 32;
+			item.height = 48;
 			item.useTime = 20;
 			item.useAnimation = 20;
 			item.useStyle = ItemUseStyleID.SwingThrow;
