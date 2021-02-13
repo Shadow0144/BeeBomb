@@ -27,7 +27,7 @@ Also adds a Bee House workbench.
 
 The Bee House allows you to convert Dayblooms into Hive.
 
-![](BeeHouseCraft.png)
+![](BeeHouseCrafting.png)
 
 The Bee House is sold by the Witch Doctor in the Jungle for 6 gp after the Queen Bee is defeated.
 
