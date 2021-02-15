@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.Graphics.Shaders;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Graphics;
 
 namespace BeeBomb.Buffs
 {

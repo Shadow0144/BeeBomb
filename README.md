@@ -8,20 +8,20 @@ Bee Bomb mod for Terraria
 Adds a Bee Bomb (alternately a "Beenamite"), which is an enhanced Beenade.
 
 <p align="center">
-	<img src="BeeBomb.gif" width="50%"/>
+	<img src="BeeBomb.gif"/>
 </p>
 
 The Bee Bomb sticks to tiles like a Sticky Bomb, and when it explodes, it does 150 damage and releases 35-45 Bees.
 If wearing the Hive Pack, more powerful Bees will be released.
 
 <p align="center">
-	<img src="BeeBombHivePack.gif" width="50%"/>
+	<img src="BeeBombHivePack.gif"/>
 </p>
 
 Anyone caught in the blast will be Honey'd and have their movement extremely reduced.
 
 <p align="center">
-	<img src="Honeyed.gif" width="50%"/>
+	<img src="Honeyed.gif"/>
 </p>
 
 The Bee Bomb does not destroy tiles.
@@ -36,7 +36,7 @@ Adds a crafting recipe for the Bee Bomb: 5 Hive and 1 Dynamite (Note: to be chan
 Also adds a Bee House workbench.
 
 <p align="center">
-	<img src="BeeHouse.gif" width="50%"/>
+	<img src="BeeHouse.gif"/>
 </p>
 
 The Bee House allows you to convert Dayblooms into Hive.

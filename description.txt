@@ -1,4 +1,3 @@
-# Bee Bomb
 Bee Bomb mod for Terraria
 
 Adds a Bee Bomb (alternately a "Beenamite"), which is an enhanced Beenade.

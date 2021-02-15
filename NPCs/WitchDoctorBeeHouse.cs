@@ -1,7 +1,7 @@
-﻿using BeeBomb.Items;
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using BeeBomb.Items;
 
 namespace BeeBomb.NPCs
 {
