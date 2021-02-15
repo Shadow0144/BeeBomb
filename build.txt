@@ -1,4 +1,5 @@
 displayName = Bee Bomb
 author = Shadow0144
-version = 1.0
+version = 1.0.3
 homepage = https://github.com/Shadow0144/BeeBomb
+buildIgnore = *.gif
