@@ -7,7 +7,6 @@ namespace BeeBomb.Buffs
     public class HoneyedBuff : ModBuff
     {
         private const float SPEED_MOD = 0.5f;
-        private Color COLOR = new Color(227, 222, 68, 255);
 
         public override void SetDefaults()
         {
@@ -25,7 +24,7 @@ namespace BeeBomb.Buffs
             base.Update(player, ref buffIndex);
             player.moveSpeed *= SPEED_MOD;
             player.honeyWet = true;
-            addHoney(player.position, player.width, player.height, player.velocity);
+            AddHoney(player.position, player.width, player.height, player.velocity);
         }
 
         public override void Update(NPC npc, ref int buffIndex)
@@ -34,10 +33,10 @@ namespace BeeBomb.Buffs
             npc.velocity.X *= SPEED_MOD;
             npc.velocity.Y *= SPEED_MOD;
             npc.honeyWet = true;
-            addHoney(npc.position, npc.width, npc.height, npc.velocity);
+            AddHoney(npc.position, npc.width, npc.height, npc.velocity);
         }
 
-        private void addHoney(Vector2 position, int width, int height, Vector2 velocity)
+        private void AddHoney(Vector2 position, int width, int height, Vector2 velocity)
         {
             position.X -= 2.0f;
             position.Y -= 2.0f;
